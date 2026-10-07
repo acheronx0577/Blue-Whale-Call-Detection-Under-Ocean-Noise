@@ -1,1 +1,24 @@
 CC BY 4.0 for MBARI Pacific Sound recordings and models
+
+This file records the third-party license for MBARI Pacific Sound materials used by this project. It does not relicense original files in this repository. Those remain under the MIT License in LICENSE.
+
+The AWS Open Data Registry dataset "Pacific Ocean Sound Recordings" sets License: CC-BY 4.0 and lists both the sound-recording buckets and s3://pacific-sound-models ("machine learning models").
+
+- https://registry.opendata.aws/pacific-sound/
+- https://github.com/awslabs/open-data-registry/blob/main/datasets/pacific-sound.yaml
+
+Copyright holder of those recordings and models: Monterey Bay Aquarium Research Institute (MBARI).
+
+This repository does not contain the audio or the model weights. If either is shared, attribute MBARI, link the registry entry and the model page, and note any changes.
+
+The Blue A tutorial notebook is marked GPL. That statement covers the notebook code, not this CC BY 4.0 record.
+https://docs.mbari.org/pacific-sound/notebooks/bluewhales/classify/blueA/PacificSoundClassifyBlueA/
+
+The text below is the Creative Commons Attribution 4.0 International Public License, copied from https://creativecommons.org/licenses/by/4.0/legalcode.txt
+
+=======================================================================
+Attribution 4.0 International
+
+=======================================================================
+
+Creative Commons Corporation ("Creative Commons") is not a law firm and
