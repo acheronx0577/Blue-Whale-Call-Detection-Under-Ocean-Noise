@@ -66,3 +66,15 @@ Recorded 2026-10-13. Six five-minute clips from the 2025-11-01 Pacific Sound fil
 
 Calibrated 63 Hz medians for the first four clips, dB re 1 μPa²/Hz: A 70.622, C 71.485, B 76.229, D 77.448. The call score stays near 0.03 in both the quieter pair and the noisier pair.
 
+The original files are too quiet for a human ear. Louder copies are for listening only. Ear labels written earlier are the weak part of the record, so this set does not support a miss rate, a false-alarm rate, or a noise comparison.
+
+A one-row run of `whale_mix` on the Sample A picture above returned Laya choice `call` at probability 0.743. The mix label was `call`, reason `agree`.
+
+## Sources
+
+- [MBARI Pacific Sound quickstart](https://docs.mbari.org/pacific-sound/quickstart/)
+- [Pacific Sound data registry and license](https://registry.opendata.aws/pacific-sound/)
+- [Blue A model page](https://docs.mbari.org/pacific-sound/models/)
+- [Blue A classify notebook](https://docs.mbari.org/pacific-sound/notebooks/bluewhales/classify/blueA/PacificSoundClassifyBlueA/)
+- [Shipping-noise metric](https://docs.mbari.org/pacific-sound/notebooks/shippingnoise/PacificSoundShippingNoiseAnalysis/)
+- [Laya English checkpoint](https://huggingface.co/convaiinnovations/laya)
