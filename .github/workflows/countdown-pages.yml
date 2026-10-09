@@ -1,0 +1,53 @@
+name: Countdown CI and GitHub Pages
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "countdown/**"
+      - ".github/workflows/countdown-pages.yml"
+  pull_request:
+    branches: [main]
+    paths:
+      - "countdown/**"
+      - ".github/workflows/countdown-pages.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate countdown page
+        run: |
+          test -s countdown/index.html
+          grep -q '2026-10-22T21:44:54-07:00' countdown/index.html
+          grep -q 'background:transparent' countdown/index.html
+
+  deploy:
+    if: github.event_name != 'pull_request'
+    needs: validate
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true
+      - name: Upload countdown site
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./countdown
+      - name: Deploy countdown
+        id: deployment
+        uses: actions/deploy-pages@v4
