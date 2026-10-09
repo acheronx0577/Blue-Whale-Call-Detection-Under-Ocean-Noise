@@ -20,3 +20,26 @@ Laya reads the written row and answers in one pass. After the rows are sorted, L
 
 Recordings come from the Pacific Sound archive. The picture step and the starting weights are MBARI's Blue A model. The one-pass check is Laya.
 
+## Commands
+
+One command scores, sorts, and exports:
+
+```bash
+python -m whale_mix run --scores path\to\candidate-scores.csv --out out\mix
+```
+
+Each step also runs alone:
+
+```bash
+python -m whale_mix score --scores path\to\candidate-scores.csv --out out\sound.csv
+python -m whale_mix sort --table out\sound.csv --out out\sorted.csv
+python -m whale_mix export --table out\sorted.csv --out out\mix
+python -m whale_mix analyze --table out\mix\decisions.csv --out out\mix
+```
+
+`score --image picture.jpg` scores one spectrogram with the local Blue A weights. The export writes the technical files first: `decisions.csv`, `decisions.json`, and `call`, `not-call`, and `review` folders. `report.md` is written after those files. It states the counts in sentences, then Laya's reading of those counts. An optional `--noise` CSV with `sample_id` and `noise_db` attaches a 63 Hz level to each sample in that report.
+
+Audio, pictures, score tables, Blue A weights, and Laya weights stay outside this repository.
+
+## Data and licensing
+
