@@ -43,3 +43,26 @@ Audio, pictures, score tables, Blue A weights, and Laya weights stay outside thi
 
 ## Data and licensing
 
+- The [Pacific Sound archive](https://www.mbari.org/project/open-acoustic-data/) provides daily 2 kHz recordings. The [AWS Open Data registry](https://registry.opendata.aws/pacific-sound/) lists the recordings and `s3://pacific-sound-models` under **CC BY 4.0**. Attribute Monterey Bay Aquarium Research Institute, link the registry and the [model page](https://docs.mbari.org/pacific-sound/models/), and note changes. The full text is in [LICENSE-CC-BY-4.0](LICENSE-CC-BY-4.0).
+- MBARI's published blueA validation F1 is 0.9454 for candidate pictures. That number is MBARI's, measured on their validation set. It is not a result from this project.
+- MBARI's [shipping-noise notebook](https://docs.mbari.org/pacific-sound/notebooks/shippingnoise/PacificSoundShippingNoiseAnalysis/) is GPL-3.0. This repository does not include that notebook.
+- Laya's English checkpoint is Apache-2.0: [convaiinnovations/laya](https://huggingface.co/convaiinnovations/laya). This repository does not include those weights.
+- Original code in this repository is under the MIT license in [LICENSE](LICENSE). That license does not replace the CC BY 4.0 terms for MBARI material or the Apache-2.0 terms for Laya.
+
+No registration is required to use these licenses. The credit above is the requirement.
+
+## Status
+
+Recorded 2026-10-13. Six five-minute clips from the 2025-11-01 Pacific Sound file, Samples A through F. Blue A scored 69 pictures on the original files. One picture scored higher for `bat`: Sample A, 92.4–98.6 seconds, `bat` 0.507 and `baf` 0.493. The other 68 scored higher for `baf`. None reached 0.7.
+
+| Sample | Pictures | Bigger `bat` | Highest `bat` |
+| --- | --- | --- | --- |
+| A | 7 | 1 | 0.507 |
+| B | 9 | 0 | 0.030 |
+| C | 6 | 0 | 0.073 |
+| D | 20 | 0 | 0.044 |
+| E | 22 | 0 | 0.034 |
+| F | 5 | 0 | 0.041 |
+
+Calibrated 63 Hz medians for the first four clips, dB re 1 μPa²/Hz: A 70.622, C 71.485, B 76.229, D 77.448. The call score stays near 0.03 in both the quieter pair and the noisier pair.
+
