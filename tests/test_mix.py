@@ -88,3 +88,26 @@ class MixTests(unittest.TestCase):
         mixed = sort_rows(
             [{"sample_id": "sample-c", "bat": "0.030000", "baf": "0.970000", "sound_label": "not-call"}],
             agent,
+        )
+        self.assertEqual(mixed[0]["mix_label"], "not-call")
+        self.assertEqual(mixed[0]["mix_reason"], "agree")
+        self.assertIn("bat 0.030000", agent.state)
+
+    def test_export_writes_three_formats(self):
+        rows = [
+            {
+                "sample_id": "sample-a",
+                "candidate_id": "sample-a-004",
+                "picture_start_s": "92.416",
+                "picture_end_s": "98.56",
+                "bat": "0.507124",
+                "baf": "0.492876",
+                "sound_label": "call",
+                "laya_choice": "call",
+                "laya_probability": "0.800000",
+                "mix_label": "call",
+                "mix_reason": "agree",
+                "image_file": "a.jpg",
+            }
+        ]
+        with tempfile.TemporaryDirectory() as tmp:
