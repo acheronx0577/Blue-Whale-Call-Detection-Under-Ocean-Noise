@@ -134,3 +134,25 @@ class MixTests(unittest.TestCase):
                 "mix_reason": "agree",
             },
             {
+                "sample_id": "sample-c",
+                "candidate_id": "sample-c-001",
+                "picture_start_s": "0.256",
+                "picture_end_s": "3.84",
+                "bat": "0.032918",
+                "baf": "0.967082",
+                "mix_label": "not-call",
+                "mix_reason": "agree",
+            },
+        ]
+        summary = summarize(rows)
+        text = render_report(
+            summary,
+            {"pattern": "one-spike", "pattern_probability": 0.7, "rate_ready": "no", "rate_ready_probability": 0.2},
+        )
+        self.assertLess(text.index("This report covers 2 pictures."), text.index("What Laya said"))
+        self.assertIn("highest call score in Blue A's table is 0.507", text)
+        self.assertIn("1 picture went to call.", text)
+        self.assertIn("None sorted as call.", text)
+        self.assertNotIn("0 pictures", text)
+        self.assertIn("Laya said no.", text)
+        self.assertIn("No 63 Hz level was attached", text)
