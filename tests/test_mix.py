@@ -156,3 +156,8 @@ class MixTests(unittest.TestCase):
         self.assertNotIn("0 pictures", text)
         self.assertIn("Laya said no.", text)
         self.assertIn("No 63 Hz level was attached", text)
+        self.assertIn("One picture stands out as a call.", text)
+
+
+if __name__ == "__main__":
+    unittest.main()
