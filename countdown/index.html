@@ -32,3 +32,5 @@ h1{margin:0;font-size:clamp(20px,4vw,28px);line-height:1.25;font-weight:650}.dat
 const target=new Date("2026-10-22T21:44:54-07:00").getTime();
 const ids=["days","hours","minutes","seconds"],status=document.getElementById("status");
 function render(){const left=Math.max(0,target-Date.now()),v=[Math.floor(left/86400000),Math.floor(left/3600000)%24,Math.floor(left/60000)%60,Math.floor(left/1000)%60];ids.forEach((id,i)=>document.getElementById(id).textContent=String(v[i]).padStart(2,"0"));if(!left)status.textContent="The project checkpoint time has arrived."}
+render();window.setInterval(render,1000);
+</script></body></html>
