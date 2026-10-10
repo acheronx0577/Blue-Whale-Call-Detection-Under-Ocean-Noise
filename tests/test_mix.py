@@ -65,3 +65,26 @@ class MixTests(unittest.TestCase):
                         "sample_id": "sample-b",
                         "candidate_id": "sample-b-001",
                         "status": "not_scored: edge",
+                        "bat_score": "",
+                        "baf_score": "",
+                        "centered_window_start_s": "",
+                        "centered_window_end_s": "",
+                        "image_file": "",
+                    }
+                )
+            rows = rows_from_blue_a(path)
+        self.assertEqual(len(rows), 1)
+        self.assertEqual(rows[0]["sound_label"], "call")
+        self.assertEqual(rows[0]["picture_start_s"], "92.416")
+
+    def test_sort_uses_the_agent_once_per_row(self):
+        class Agent:
+            def predict(self, state, questions):
+                self.state = state
+                self.questions = questions
+                return {"answers": {"label": {"choice": "not-call", "probability": 0.91}}}
+
+        agent = Agent()
+        mixed = sort_rows(
+            [{"sample_id": "sample-c", "bat": "0.030000", "baf": "0.970000", "sound_label": "not-call"}],
+            agent,
