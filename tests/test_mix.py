@@ -111,3 +111,26 @@ class MixTests(unittest.TestCase):
             }
         ]
         with tempfile.TemporaryDirectory() as tmp:
+            counts = export_rows(rows, tmp)
+            out = Path(tmp)
+            self.assertEqual(counts["call"], 1)
+            self.assertTrue((out / "decisions.csv").is_file())
+            payload = json.loads((out / "decisions.json").read_text(encoding="utf-8"))
+            self.assertEqual(payload[0]["mix_label"], "call")
+            manifest = (out / "call" / "manifest.txt").read_text(encoding="utf-8")
+            self.assertIn("sample-a-004", manifest)
+            self.assertEqual((out / "not-call" / "manifest.txt").read_text(encoding="utf-8"), "")
+
+    def test_report_states_the_counts_before_any_reading(self):
+        rows = [
+            {
+                "sample_id": "sample-a",
+                "candidate_id": "sample-a-004",
+                "picture_start_s": "92.416",
+                "picture_end_s": "98.56",
+                "bat": "0.507124",
+                "baf": "0.492876",
+                "mix_label": "call",
+                "mix_reason": "agree",
+            },
+            {
