@@ -19,3 +19,26 @@ class MixTests(unittest.TestCase):
 
     def test_agreement_disagreement_and_low_probability(self):
         self.assertEqual(mix_label("call", "call", 0.8), ("call", "agree"))
+        self.assertEqual(mix_label("not-call", "call", 0.9), ("review", "disagree"))
+        self.assertEqual(mix_label("not-call", "call", 0.4), ("not-call", "blue-a"))
+
+    def test_laya_probability_from_probs_map(self):
+        choice, probability = laya_fields({"choice": "call", "probs": {"call": 0.75, "not-call": 0.25}})
+        self.assertEqual(choice, "call")
+        self.assertAlmostEqual(probability, 0.75)
+
+    def test_choice_probability_wins_over_the_other_confidence_field(self):
+        choice, probability = laya_fields(
+            {
+                "choice": "call",
+                "probabilities": {"call": 0.7432, "not-call": 0.2568},
+                "confidence": 0.1781,
+                "answer_confidence": 0.7432,
+            }
+        )
+        self.assertEqual(choice, "call")
+        self.assertAlmostEqual(probability, 0.7432)
+
+    def test_blue_a_csv_skips_unscored_rows(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "scores.csv"
