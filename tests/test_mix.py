@@ -42,3 +42,26 @@ class MixTests(unittest.TestCase):
     def test_blue_a_csv_skips_unscored_rows(self):
         with tempfile.TemporaryDirectory() as tmp:
             path = Path(tmp) / "scores.csv"
+            with path.open("w", newline="", encoding="utf-8") as handle:
+                writer = csv.DictWriter(
+                    handle,
+                    fieldnames=["sample_id", "candidate_id", "status", "bat_score", "baf_score", "centered_window_start_s", "centered_window_end_s", "image_file"],
+                )
+                writer.writeheader()
+                writer.writerow(
+                    {
+                        "sample_id": "sample-a",
+                        "candidate_id": "sample-a-004",
+                        "status": "scored",
+                        "bat_score": "0.507124",
+                        "baf_score": "0.492876",
+                        "centered_window_start_s": "92.416",
+                        "centered_window_end_s": "98.56",
+                        "image_file": "a.jpg",
+                    }
+                )
+                writer.writerow(
+                    {
+                        "sample_id": "sample-b",
+                        "candidate_id": "sample-b-001",
+                        "status": "not_scored: edge",
