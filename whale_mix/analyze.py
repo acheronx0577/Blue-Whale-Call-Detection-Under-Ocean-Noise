@@ -184,3 +184,25 @@ def render_report(summary, reading=None):
             f"on {highest['sample_id']}, from {highest['picture_start_s']} to "
             f"{highest['picture_end_s']} seconds. The not-a-call score on that same picture is {baf_text}."
         )
+        lines.append("")
+    agree_bits = []
+    if reasons["agree"]:
+        agree_bits.append(f"On {_count(reasons['agree'], 'picture')}, Blue A and Laya gave the same answer.")
+    if reasons["blue-a"]:
+        agree_bits.append(f"On {_count(reasons['blue-a'], 'picture')}, Laya was unsure, so Blue A's answer stayed.")
+    if reasons["disagree"]:
+        agree_bits.append(f"On {_count(reasons['disagree'], 'picture')}, they disagreed, so the row went to review.")
+    if agree_bits:
+        lines.append(" ".join(agree_bits))
+        lines.append("")
+    lines.append("## Each sample")
+    lines.append("")
+    for sample in summary["samples"]:
+        bat = sample["highest_bat"]
+        bat_text = f"{bat:.3f}" if bat is not None else "none"
+        noise = ""
+        if sample["noise_db"] is not None:
+            noise = f" The 63 Hz level for this sample is {sample['noise_db']}."
+        call_text = (
+            f"{_count(sample['call'], 'picture')} sorted as call."
+            if sample["call"]
