@@ -74,3 +74,25 @@ def summarize(rows, noise=None):
     for sample in sorted(by_sample):
         slot = by_sample[sample]
         samples.append(
+            {
+                "sample_id": sample,
+                "pictures": slot["pictures"],
+                "highest_bat": slot["highest_bat"],
+                "call": slot["call"],
+                "noise_db": noise.get(sample),
+            }
+        )
+    return {
+        "rows": len(rows),
+        "labels": by_label,
+        "reasons": by_reason,
+        "samples": samples,
+        "highest": best,
+        "noise_attached": any(item["noise_db"] is not None for item in samples),
+    }
+
+
+def _count(n, word):
+    if int(n) == 1:
+        return f"1 {word}"
+    return f"{n} {word}s"
