@@ -118,3 +118,25 @@ def state_for(summary):
         lines.append(
             f"highest bat {highest['bat']:.3f} on {highest['sample_id']} "
             f"from {highest['picture_start_s']} to {highest['picture_end_s']} seconds."
+        )
+    for sample in summary["samples"]:
+        bat = sample["highest_bat"]
+        bat_text = f"{bat:.3f}" if bat is not None else "none"
+        noise = sample["noise_db"]
+        noise_text = f", 63 Hz {noise}" if noise is not None else ""
+        lines.append(
+            f"{sample['sample_id']}: {sample['pictures']} pictures, "
+            f"highest bat {bat_text}, call rows {sample['call']}{noise_text}."
+        )
+    if summary["noise_attached"]:
+        lines.append("63 Hz levels are attached by sample.")
+    else:
+        lines.append("63 Hz levels were not attached.")
+    return " ".join(lines)
+
+
+PATTERN_PLAIN = {
+    "one-spike": "One picture stands out as a call. The rest stay low.",
+    "flat": "The call scores stay low from picture to picture.",
+    "too-few": "There are not enough call pictures to compare a quieter hour with a noisier hour.",
+}
