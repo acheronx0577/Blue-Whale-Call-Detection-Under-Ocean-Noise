@@ -140,3 +140,25 @@ PATTERN_PLAIN = {
     "flat": "The call scores stay low from picture to picture.",
     "too-few": "There are not enough call pictures to compare a quieter hour with a noisier hour.",
 }
+
+
+def render_report(summary, reading=None):
+    """Plain report. Blue A's scores come first. Laya's sort follows. Then Laya reads the counts."""
+    labels = summary["labels"]
+    reasons = summary["reasons"]
+    if summary["rows"] == 1:
+        opening = "This report covers 1 picture."
+    else:
+        opening = f"This report covers {summary['rows']} pictures."
+    lines = [
+        "# Report",
+        "",
+        opening,
+        "",
+        "It uses two tables.",
+        "",
+        "Blue A's table scores each 25-second picture. `bat` is the call score. `baf` is the not-a-call score. The bigger number is Blue A's answer for that picture.",
+        "",
+        "Laya's table sorts those written rows. Each row lands in call, not-call, or review.",
+        "",
+        "## What the tables say",
