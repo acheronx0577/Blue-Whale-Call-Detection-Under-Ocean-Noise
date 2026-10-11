@@ -228,3 +228,25 @@ def render_report(summary, reading=None):
         pattern_line = f"Laya's pattern word is {pattern}."
         if plain:
             pattern_line = f"{pattern_line} {plain}"
+        lines.extend(
+            [
+                "",
+                "## What Laya said about these counts",
+                "",
+                (
+                    f"{pattern_line} "
+                    f"The chance Laya gave that word is {reading.get('pattern_probability', 0):.3f}."
+                ),
+                "",
+                (
+                    "Can these tables support a miss rate or a noise comparison? "
+                    f"Laya said {reading.get('rate_ready', 'no')}. "
+                    f"The chance of yes was {reading.get('rate_ready_probability', 0):.3f}."
+                ),
+                "",
+                "Laya read the counts from the two tables. It did not listen to the recordings.",
+            ]
+        )
+    lines.append("")
+    return "\n".join(lines)
+
