@@ -206,3 +206,25 @@ def render_report(summary, reading=None):
         call_text = (
             f"{_count(sample['call'], 'picture')} sorted as call."
             if sample["call"]
+            else "None sorted as call."
+        )
+        lines.append(
+            f"- {sample['sample_id']}: {_count(sample['pictures'], 'picture')}. "
+            f"Highest call score {bat_text}. "
+            f"{call_text}{noise}"
+        )
+    lines.append("")
+    if summary["noise_attached"]:
+        lines.append("A 63 Hz level was written next to each sample that had one. That number stands for low-frequency noise.")
+    else:
+        lines.append("No 63 Hz level was attached to this table.")
+    lines.append("")
+    lines.append(
+        "These numbers come from the two tables. A miss rate, or a comparison of quieter hours and noisier hours, needs the call shape more than once in a quieter hour and more than once in a noisier hour."
+    )
+    if reading:
+        pattern = reading.get("pattern", "")
+        plain = PATTERN_PLAIN.get(pattern, "")
+        pattern_line = f"Laya's pattern word is {pattern}."
+        if plain:
+            pattern_line = f"{pattern_line} {plain}"
