@@ -96,3 +96,25 @@ def _count(n, word):
     if int(n) == 1:
         return f"1 {word}"
     return f"{n} {word}s"
+
+
+def state_for(summary):
+    """One short text block. Laya has to answer from these counts."""
+    labels = summary["labels"]
+    lines = [
+        f"{summary['rows']} pictures.",
+        (
+            f"call {labels['call']}. not-call {labels['not-call']}. "
+            f"review {labels['review']}."
+        ),
+        (
+            f"agreed {summary['reasons']['agree']}. "
+            f"blue-a kept {summary['reasons']['blue-a']}. "
+            f"disagreed {summary['reasons']['disagree']}."
+        ),
+    ]
+    highest = summary["highest"]
+    if highest:
+        lines.append(
+            f"highest bat {highest['bat']:.3f} on {highest['sample_id']} "
+            f"from {highest['picture_start_s']} to {highest['picture_end_s']} seconds."
