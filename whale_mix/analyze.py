@@ -52,3 +52,25 @@ def summarize(rows, noise=None):
         if reason in by_reason:
             by_reason[reason] += 1
         sample = row.get("sample_id") or "(no sample)"
+        slot = by_sample.setdefault(sample, {"pictures": 0, "highest_bat": None, "call": 0})
+        slot["pictures"] += 1
+        if label == "call":
+            slot["call"] += 1
+        bat = _num(row, "bat")
+        if bat is None:
+            continue
+        if slot["highest_bat"] is None or bat > slot["highest_bat"]:
+            slot["highest_bat"] = bat
+        if best is None or bat > best["bat"]:
+            best = {
+                "bat": bat,
+                "baf": _num(row, "baf"),
+                "sample_id": sample,
+                "picture_start_s": row.get("picture_start_s", ""),
+                "picture_end_s": row.get("picture_end_s", ""),
+                "candidate_id": row.get("candidate_id", ""),
+            }
+    samples = []
+    for sample in sorted(by_sample):
+        slot = by_sample[sample]
+        samples.append(
