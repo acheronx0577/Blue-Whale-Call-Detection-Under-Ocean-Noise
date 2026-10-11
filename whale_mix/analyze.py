@@ -30,3 +30,25 @@ PATTERN_QUESTION = {
 }
 
 
+def _num(row, key):
+    try:
+        return float(row.get(key, ""))
+    except (TypeError, ValueError):
+        return None
+
+
+def summarize(rows, noise=None):
+    """Count the sort. `noise` maps sample_id to a 63 Hz level when one was supplied."""
+    noise = noise or {}
+    by_label = {"call": 0, "not-call": 0, "review": 0}
+    by_reason = {"agree": 0, "blue-a": 0, "disagree": 0}
+    by_sample = {}
+    best = None
+    for row in rows:
+        label = row.get("mix_label") or row.get("sound_label") or ""
+        if label in by_label:
+            by_label[label] += 1
+        reason = row.get("mix_reason") or ""
+        if reason in by_reason:
+            by_reason[reason] += 1
+        sample = row.get("sample_id") or "(no sample)"
