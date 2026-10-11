@@ -162,3 +162,25 @@ def render_report(summary, reading=None):
         "Laya's table sorts those written rows. Each row lands in call, not-call, or review.",
         "",
         "## What the tables say",
+        "",
+    ]
+    pile_bits = []
+    if labels["call"]:
+        pile_bits.append(f"{_count(labels['call'], 'picture')} went to call.")
+    if labels["not-call"]:
+        pile_bits.append(f"{_count(labels['not-call'], 'picture')} went to not-call.")
+    if labels["review"]:
+        pile_bits.append(f"{_count(labels['review'], 'picture')} went to review.")
+    if not pile_bits:
+        pile_bits.append("No picture received a label.")
+    lines.append(" ".join(pile_bits))
+    lines.append("")
+    highest = summary["highest"]
+    if highest:
+        baf = highest["baf"]
+        baf_text = f"{baf:.3f}" if baf is not None else "missing"
+        lines.append(
+            f"The highest call score in Blue A's table is {highest['bat']:.3f} "
+            f"on {highest['sample_id']}, from {highest['picture_start_s']} to "
+            f"{highest['picture_end_s']} seconds. The not-a-call score on that same picture is {baf_text}."
+        )
