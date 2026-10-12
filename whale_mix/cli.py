@@ -68,3 +68,25 @@ def command_sort(args):
     mixed = sort_rows(rows, agent)
     out = args.out or args.table
     write_rows(out, mixed, EXPORT_COLUMNS)
+    print(json.dumps({"rows": len(mixed), "out": str(out)}, indent=2))
+
+
+def command_export(args):
+    rows = _read_table(args.table)
+    counts = export_rows(rows, args.out)
+    print(json.dumps(counts, indent=2))
+
+
+def command_analyze(args):
+    from whale_mix.analyze import load_noise, write_report
+    from whale_mix.sort import load_laya
+
+    rows = _read_table(args.table)
+    noise = load_noise(args.noise) if args.noise else None
+    summary, _text = write_report(rows, args.out, load_laya(args.laya), noise)
+    print(json.dumps({"out": str(Path(args.out) / "report.md"), "rows": summary["rows"]}, indent=2))
+
+
+def command_run(args):
+    out = Path(args.out)
+    out.mkdir(parents=True, exist_ok=True)
