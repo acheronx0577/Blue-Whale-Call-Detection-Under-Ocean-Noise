@@ -112,3 +112,25 @@ def command_run(args):
 
 def build_parser():
     parser = argparse.ArgumentParser(
+        prog="whale_mix",
+        description=(
+            "Blue A names each 25-second picture. Laya sorts each written row, then reads the counts. "
+            "One command does all of that and writes a plain report after the table. "
+            "score, sort, export, and analyze also run alone."
+        ),
+    )
+    sub = parser.add_subparsers(dest="command", required=True)
+
+    score = sub.add_parser("score", help="Read a Blue A score CSV, or score one image.")
+    score.add_argument("--scores", help="Blue A candidate-scores.csv")
+    score.add_argument("--image", help="One spectrogram image to score with Blue A")
+    score.add_argument("--model", default=str(DEFAULT_BLUE_A), help="Blue A SavedModel directory")
+    score.add_argument("--python", default=str(DEFAULT_BLUE_A_PYTHON), help="Python that has TensorFlow")
+    score.add_argument("--out", help="CSV path for the sound rows")
+    score.set_defaults(func=command_score)
+
+    sort = sub.add_parser("sort", help="Ask Laya which pile each written row belongs in.")
+    sort.add_argument("--table", required=True, help="Sound CSV from the score command")
+    sort.add_argument("--laya", default=str(DEFAULT_LAYA), help="Local Laya checkpoint directory")
+    sort.add_argument("--out", help="CSV path for the mixed rows")
+    sort.set_defaults(func=command_sort)
