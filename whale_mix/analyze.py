@@ -250,3 +250,25 @@ def render_report(summary, reading=None):
     lines.append("")
     return "\n".join(lines)
 
+
+def read_laya(summary, agent):
+    result = agent.predict(state_for(summary), PATTERN_QUESTION)
+    answers = result.get("answers") or {}
+    pattern_choice, pattern_probability = laya_fields(answers.get("pattern") or {})
+    rate = answers.get("rate_ready") or {}
+    rate_probability = float(rate.get("noul") or 0.0)
+    ready = "yes" if rate_probability >= 0.5 else "no"
+    return {
+        "pattern": pattern_choice,
+        "pattern_probability": pattern_probability,
+        "rate_ready": ready,
+        "rate_ready_probability": rate_probability,
+    }
+
+
+def load_noise(path):
+    import csv
+    from pathlib import Path
+
+    noise = {}
+    with Path(path).open(newline="", encoding="utf-8") as handle:
