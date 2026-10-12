@@ -272,3 +272,21 @@ def load_noise(path):
 
     noise = {}
     with Path(path).open(newline="", encoding="utf-8") as handle:
+        for row in csv.DictReader(handle):
+            sample = row.get("sample_id") or ""
+            raw = row.get("noise_db") or row.get("median_db") or ""
+            if sample and raw:
+                noise[sample] = raw
+    return noise
+
+
+def write_report(rows, out_dir, agent=None, noise=None):
+    from pathlib import Path
+
+    summary = summarize(rows, noise)
+    reading = read_laya(summary, agent) if agent is not None else None
+    text = render_report(summary, reading)
+    out = Path(out_dir)
+    out.mkdir(parents=True, exist_ok=True)
+    (out / "report.md").write_text(text, encoding="utf-8")
+    return summary, text
