@@ -90,3 +90,25 @@ def command_analyze(args):
 def command_run(args):
     out = Path(args.out)
     out.mkdir(parents=True, exist_ok=True)
+    if args.image:
+        args.out = str(out / "sound.csv")
+        command_score(args)
+        sound_path = out / "sound.csv"
+    else:
+        sound_rows = rows_from_blue_a(args.scores)
+        sound_path = out / "sound.csv"
+        write_rows(sound_path, sound_rows, COLUMNS)
+    from whale_mix.analyze import load_noise, write_report
+    from whale_mix.sort import load_laya, sort_rows
+
+    agent = load_laya(args.laya)
+    mixed = sort_rows(_read_table(sound_path), agent)
+    write_rows(out / "sorted.csv", mixed, EXPORT_COLUMNS)
+    counts = export_rows(mixed, out)
+    noise = load_noise(args.noise) if args.noise else None
+    write_report(mixed, out, agent, noise)
+    print(json.dumps({"out": str(out), "report": str(out / "report.md"), **counts}, indent=2))
+
+
+def build_parser():
+    parser = argparse.ArgumentParser(
