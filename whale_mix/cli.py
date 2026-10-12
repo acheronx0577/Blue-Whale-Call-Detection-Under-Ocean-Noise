@@ -46,3 +46,25 @@ def command_score(args):
         if completed.returncode != 0:
             sys.stderr.write(completed.stderr)
             raise SystemExit(completed.returncode)
+        line = completed.stdout.strip().splitlines()[-1]
+        row = json.loads(line)
+        if args.out:
+            write_rows(args.out, [row], COLUMNS)
+        print(json.dumps(row, indent=2))
+        return
+    if not args.scores:
+        raise SystemExit("pass --scores with a Blue A CSV, or --image with one spectrogram")
+    rows = rows_from_blue_a(args.scores)
+    if args.out:
+        write_rows(args.out, rows, COLUMNS)
+    print(json.dumps({"rows": len(rows), "out": str(args.out or "")}, indent=2))
+
+
+def command_sort(args):
+    from whale_mix.sort import load_laya, sort_rows
+
+    rows = _read_table(args.table)
+    agent = load_laya(args.laya)
+    mixed = sort_rows(rows, agent)
+    out = args.out or args.table
+    write_rows(out, mixed, EXPORT_COLUMNS)
