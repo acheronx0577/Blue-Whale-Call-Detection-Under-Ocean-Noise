@@ -24,3 +24,25 @@ DEFAULT_BLUE_A_PYTHON = Path(
         r"D:\Code\Projects\Marine-Science\MBARI-Blue-A\.venv\Scripts\python.exe",
     )
 )
+
+
+def _read_table(path):
+    with Path(path).open(newline="", encoding="utf-8") as handle:
+        return list(csv.DictReader(handle))
+
+
+def command_score(args):
+    if args.image:
+        script = Path(__file__).resolve().parent / "score_image.py"
+        python = Path(args.python)
+        if not python.is_file():
+            raise SystemExit(f"Blue A Python was not found at {python}")
+        completed = subprocess.run(
+            [str(python), str(script), "--model", str(args.model), "--image", str(args.image)],
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+        if completed.returncode != 0:
+            sys.stderr.write(completed.stderr)
+            raise SystemExit(completed.returncode)
