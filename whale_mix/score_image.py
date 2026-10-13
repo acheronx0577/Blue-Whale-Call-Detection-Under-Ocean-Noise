@@ -26,3 +26,25 @@ def score_image(model_dir, image_path):
     mean = np.asarray(config["image_mean"], dtype=np.float32)
     std = np.asarray(config["image_std"], dtype=np.float32)
     image_float = (image_float - mean) / (std + 1.0e-9)
+    scores = model(image_float[np.newaxis, :, :]).numpy()[0]
+    baf = float(scores[0])
+    bat = float(scores[1])
+    return {
+        "sample_id": "",
+        "candidate_id": Path(image_path).stem,
+        "picture_start_s": "",
+        "picture_end_s": "",
+        "bat": f"{bat:.6f}",
+        "baf": f"{baf:.6f}",
+        "sound_label": "call" if bat > baf else "not-call",
+        "image_file": Path(image_path).name,
+        "classes": config.get("classes", ["baf", "bat"]),
+    }
+
+
+def main():
+    parser = argparse.ArgumentParser(description="Score one image with Blue A.")
+    parser.add_argument("--model", required=True)
+    parser.add_argument("--image", required=True)
+    args = parser.parse_args()
+    print(json.dumps(score_image(args.model, args.image)))
