@@ -156,3 +156,14 @@ def build_parser():
     run.add_argument("--noise", help="Optional CSV with sample_id and noise_db")
     run.add_argument("--out", required=True)
     run.set_defaults(func=command_run)
+    return parser
+
+
+def main(argv=None):
+    parser = build_parser()
+    args = parser.parse_args(argv)
+    args.func(args)
+
+
+if __name__ == "__main__":
+    main()
