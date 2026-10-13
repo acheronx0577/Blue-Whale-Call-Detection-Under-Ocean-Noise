@@ -27,3 +27,19 @@ def mix_label(sound, laya_choice, laya_probability, min_probability=LAYA_MIN_PRO
 
 
 def laya_fields(answer):
+    """Pull the choice and its probability out of one Laya answer object.
+
+    The choice probability lives on ``probabilities`` and ``answer_confidence``.
+    Laya's separate ``confidence`` field is a different number, so it is not used here.
+    """
+    if not isinstance(answer, dict):
+        return "", 0.0
+    choice = str(answer.get("choice") or "")
+    probs = answer.get("probs") or answer.get("probabilities") or {}
+    if isinstance(probs, dict) and choice in probs:
+        return choice, float(probs[choice])
+    for key in ("answer_confidence", "probability", "prob"):
+        value = answer.get(key)
+        if isinstance(value, (int, float)):
+            return choice, float(value)
+    return choice, 0.0
