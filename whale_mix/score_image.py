@@ -48,3 +48,7 @@ def main():
     parser.add_argument("--image", required=True)
     args = parser.parse_args()
     print(json.dumps(score_image(args.model, args.image)))
+
+
+if __name__ == "__main__":
+    main()
