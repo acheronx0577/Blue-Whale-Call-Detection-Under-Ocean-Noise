@@ -38,3 +38,13 @@ def sort_rows(rows, agent, min_probability=LAYA_MIN_PROBABILITY):
         mixed = dict(row)
         mixed["laya_choice"] = choice
         mixed["laya_probability"] = f"{probability:.6f}"
+        mixed["mix_label"] = label
+        mixed["mix_reason"] = reason
+        sorted_rows.append(mixed)
+    return sorted_rows
+
+
+def load_laya(model_dir):
+    import laya
+
+    return laya.load(str(model_dir))
