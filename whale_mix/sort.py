@@ -16,3 +16,25 @@ QUESTION = {
         },
     }
 }
+
+
+def state_for(row):
+    return (
+        f"sample {row.get('sample_id', '')}. "
+        f"picture {row.get('picture_start_s', '')} to {row.get('picture_end_s', '')} seconds. "
+        f"bat {row.get('bat', '')}. baf {row.get('baf', '')}. "
+        f"Blue A label {row.get('sound_label', '')}."
+    )
+
+
+def sort_rows(rows, agent, min_probability=LAYA_MIN_PROBABILITY):
+    """Add Laya's choice and the mixed label. `agent.predict` is called once per row."""
+    sorted_rows = []
+    for row in rows:
+        result = agent.predict(state_for(row), QUESTION)
+        answer = (result.get("answers") or {}).get("label") or {}
+        choice, probability = laya_fields(answer)
+        label, reason = mix_label(row.get("sound_label"), choice, probability, min_probability)
+        mixed = dict(row)
+        mixed["laya_choice"] = choice
+        mixed["laya_probability"] = f"{probability:.6f}"
