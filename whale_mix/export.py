@@ -31,3 +31,18 @@ def export_rows(rows, out_dir):
     for row in rows:
         payload.append({key: row.get(key, "") for key in EXPORT_COLUMNS})
     (out_dir / "decisions.json").write_text(json.dumps(payload, indent=2), encoding="utf-8")
+    for label in LABELS:
+        folder = out_dir / label
+        folder.mkdir(parents=True, exist_ok=True)
+        lines = []
+        for row in rows:
+            if row.get("mix_label") != label:
+                continue
+            name = row.get("candidate_id") or row.get("image_file") or row.get("sample_id")
+            lines.append(
+                f"{name}\t{row.get('sample_id', '')}\t{row.get('picture_start_s', '')}\t{row.get('picture_end_s', '')}"
+            )
+        (folder / "manifest.txt").write_text("\n".join(lines) + ("\n" if lines else ""), encoding="utf-8")
+    counts = {label: sum(row.get("mix_label") == label for row in rows) for label in LABELS}
+    counts["rows"] = len(rows)
+    return counts
