@@ -54,3 +54,25 @@ def rows_from_blue_a(path):
             baf = _float(raw, "baf", "baf_score")
             from whale_mix.mix import sound_label
 
+            rows.append(
+                {
+                    "sample_id": raw.get("sample_id", ""),
+                    "candidate_id": raw.get("candidate_id", ""),
+                    "picture_start_s": _start(raw),
+                    "picture_end_s": _end(raw),
+                    "bat": f"{bat:.6f}",
+                    "baf": f"{baf:.6f}",
+                    "sound_label": sound_label(bat, baf),
+                    "image_file": raw.get("image_file", ""),
+                }
+            )
+    return rows
+
+
+def write_rows(path, rows, fieldnames):
+    path = Path(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("w", newline="", encoding="utf-8") as handle:
+        writer = csv.DictWriter(handle, fieldnames=fieldnames, extrasaction="ignore")
+        writer.writeheader()
+        writer.writerows(rows)
