@@ -1,0 +1,11 @@
+[package]
+name = "whale-mix"
+version = "0.1.0"
+edition = "2021"
+description = "Window for the Blue A and Laya mix. Builds on Windows and Mac."
+license = "MIT"
+
+[dependencies]
+
+[lib]
+path = "src/lib.rs"
