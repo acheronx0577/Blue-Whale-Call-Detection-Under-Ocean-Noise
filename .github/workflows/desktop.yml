@@ -1,0 +1,39 @@
+name: desktop
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            artifact: whale-mix-windows
+          - os: macos-latest
+            artifact: whale-mix-macos
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Test
+        run: cargo test --manifest-path app/Cargo.toml
+      - name: Release binary
+        run: cargo build --release --manifest-path app/Cargo.toml
+      - name: Pack Mac app
+        if: runner.os == 'macOS'
+        shell: bash
+        run: sh app/pack/mac-app.sh
+      - name: Upload Windows exe
+        if: runner.os == 'Windows'
+        uses: actions/upload-artifact@v4
+        with:
+          name: whale-mix-windows
+          path: app/target/release/whale-mix.exe
+      - name: Upload Mac app
+        if: runner.os == 'macOS'
+        uses: actions/upload-artifact@v4
+        with:
+          name: whale-mix-macos
+          path: app/target/release/Whale Mix.app
