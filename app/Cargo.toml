@@ -6,6 +6,8 @@ description = "Window for the Blue A and Laya mix. Builds on Windows and Mac."
 license = "MIT"
 
 [dependencies]
+csv = "1.3"
+serde = { version = "1", features = ["derive"] }
 
 [lib]
 path = "src/lib.rs"
