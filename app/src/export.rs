@@ -103,6 +103,18 @@ pub fn export_rows(rows: &[SoundRow], out_dir: &Path) -> std::io::Result<ExportC
     Ok(counts)
 }
 
+pub fn write_report(
+    rows: &[SoundRow],
+    out_dir: &Path,
+    noise: &std::collections::HashMap<String, String>,
+) -> std::io::Result<String> {
+    let summary = crate::report::summarize(rows, noise);
+    let text = crate::report::render_report(&summary, None);
+    std::fs::create_dir_all(out_dir)?;
+    std::fs::write(out_dir.join("report.md"), &text)?;
+    Ok(text)
+}
+
 #[cfg(test)]
 mod tests {
     use super::export_rows;
