@@ -41,6 +41,26 @@ python -m whale_mix analyze --table out\mix\decisions.csv --out out\mix
 
 Audio, pictures, score tables, Blue A weights, and Laya weights stay outside this repository.
 
+## Desktop
+
+The same program builds a Windows exe and a Mac app. It reads a Blue A score CSV, shows each picture's scores, and writes `decisions.csv`, `decisions.json`, the `call`, `not-call`, and `review` folders, and `report.md`. A row that already contains `laya_choice` and `laya_probability` uses the mix rule. A row without those columns keeps Blue A's label.
+
+Build it locally after Rust is installed:
+
+```bash
+cargo build --release --manifest-path app/Cargo.toml
+```
+
+On Windows the program is `app/target/release/whale-mix.exe`. On a Mac, `sh app/pack/mac-app.sh` after that release build produces `app/target/release/Whale Mix.app`. The first launch of an unsigned Mac app needs a right-click, then Open.
+
+Headless export, used by the tests:
+
+```bash
+cargo run --manifest-path app/Cargo.toml --release -- --scores path/to/candidate-scores.csv --out out/mix
+```
+
+GitHub Actions workflow `desktop` builds both artifacts when it is run by hand. Blue A weights and Laya weights are still outside this program.
+
 ## Data and licensing
 
 - The [Pacific Sound archive](https://www.mbari.org/project/open-acoustic-data/) provides daily 2 kHz recordings. The [AWS Open Data registry](https://registry.opendata.aws/pacific-sound/) lists the recordings and `s3://pacific-sound-models` under **CC BY 4.0**. Attribute Monterey Bay Aquarium Research Institute, link the registry and the [model page](https://docs.mbari.org/pacific-sound/models/), and note changes. The full text is in [LICENSE-CC-BY-4.0](LICENSE-CC-BY-4.0).
