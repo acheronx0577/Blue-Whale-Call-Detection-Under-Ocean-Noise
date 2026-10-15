@@ -89,7 +89,7 @@ pub fn rows_from_blue_a(path: &std::path::Path) -> Result<Vec<SoundRow>, csv::Er
             continue;
         };
         let sound = crate::mix::sound_label(bat, baf).to_string();
-        rows.push(SoundRow {
+        let mut row = SoundRow {
             sample_id: raw.sample_id,
             candidate_id: raw.candidate_id,
             picture_start_s: first_present(&[
@@ -104,15 +104,27 @@ pub fn rows_from_blue_a(path: &std::path::Path) -> Result<Vec<SoundRow>, csv::Er
             ]),
             bat: format!("{bat:.6}"),
             baf: format!("{baf:.6}"),
-            sound_label: sound.clone(),
+            sound_label: sound,
             image_file: raw.image_file,
             laya_choice: raw.laya_choice,
             laya_probability: raw.laya_probability,
-            mix_label: sound,
-            mix_reason: "blue-a".to_string(),
-        });
+            mix_label: String::new(),
+            mix_reason: String::new(),
+        };
+        apply_saved_laya(&mut row);
+        rows.push(row);
     }
     Ok(rows)
+}
+
+pub fn apply_saved_laya(row: &mut SoundRow) {
+    let probability = row.laya_probability.parse::<f64>().unwrap_or(0.0);
+    let (label, reason) = crate::mix::mix_label(&row.sound_label, &row.laya_choice, probability);
+    if !row.laya_choice.is_empty() {
+        row.laya_probability = format!("{probability:.6}");
+    }
+    row.mix_label = label;
+    row.mix_reason = reason;
 }
 
 #[cfg(test)]
@@ -143,5 +155,27 @@ mod tests {
         assert_eq!(rows[0].picture_start_s, "92.416");
         assert_eq!(rows[0].bat, "0.507124");
         let _ = std::fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn saved_laya_choice_sets_the_mix_label() {
+        let mut row = super::SoundRow {
+            sample_id: "sample-c".to_string(),
+            candidate_id: String::new(),
+            picture_start_s: String::new(),
+            picture_end_s: String::new(),
+            bat: "0.030000".to_string(),
+            baf: "0.970000".to_string(),
+            sound_label: "not-call".to_string(),
+            image_file: String::new(),
+            laya_choice: "not-call".to_string(),
+            laya_probability: "0.91".to_string(),
+            mix_label: String::new(),
+            mix_reason: String::new(),
+        };
+        super::apply_saved_laya(&mut row);
+        assert_eq!(row.mix_label, "not-call");
+        assert_eq!(row.mix_reason, "agree");
+        assert_eq!(row.laya_probability, "0.910000");
     }
 }
