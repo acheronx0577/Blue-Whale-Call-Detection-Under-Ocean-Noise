@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Whale Mix</title>
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+<div class="app">
+  <aside class="side" id="sidebar" aria-label="Pages">
+    <div class="side-head">
+      <p class="app-name side-body">Whale Mix</p>
+      <button id="fold-side" class="fold" type="button" aria-expanded="true" aria-controls="sidebar">Hide sidebar</button>
+    </div>
+    <label class="side-search side-body">
+      <input id="page-search" type="search" placeholder="Find a page" aria-label="Find a page">
+    </label>
+    <div class="pages-head side-body">
+      <p class="side-label">Pages</p>
+      <button id="new-page" class="new-page" type="button">New page</button>
+    </div>
+    <div class="sound-list side-body" id="page-list"></div>
+  </aside>
+
+  <main class="stage">
+  <header class="page-head">
+    <p class="eyebrow">Page</p>
+    <input id="page-title" class="page-title" type="text" aria-label="Page title" value="2025-11-01">
+    <p class="page-meta" id="page-meta"></p>
+    <div class="steps" role="tablist" aria-label="What to do with this page">
+      <button id="tab-drop" role="tab" aria-selected="true" aria-controls="drop">Graphs</button>
+      <button id="tab-sort" role="tab" aria-selected="false" aria-controls="sort">Sort and compare</button>
+      <button id="tab-export" role="tab" aria-selected="false" aria-controls="export">Export</button>
+    </div>
+  </header>
+  <section id="drop" class="panel on" role="tabpanel">
+    <p id="no-page" class="blank-note" hidden>No page open. Use New page.</p>
+    <div id="page-empty" class="page-empty" hidden>
+      <div class="dropbar" id="bulk">
+        <strong>This page is empty</strong>
+        <span>Drop whale sounds here. They show up in this page, not under it in the sidebar.</span>
+        <label class="btn">Browse
+          <input id="picture-input" class="file-input" type="file" multiple webkitdirectory accept="audio/*,.wav,.flac,.mp3,.aiff">
+        </label>
+      </div>
+    </div>
+    <div class="db" id="page-filled">
+      <div class="db-bar">
+        <span class="hint" id="row-count"></span>
+        <span class="spacer"></span>
+        <input id="search" class="search" type="search" placeholder="Search sounds" aria-label="Search sounds">
+      </div>
+      <div class="db-scroll">
+        <table class="sheet">
+          <colgroup>
+            <col><col><col><col><col><col><col><col>
+          </colgroup>
+          <thead>
+            <tr>
+              <th>Sound</th>
+              <th>Window</th>
+              <th>Graph</th>
+              <th class="num">bat</th>
+              <th class="num">baf</th>
+              <th class="num">63 Hz</th>
+              <th>Laya</th>
+              <th>Reason</th>
+            </tr>
+          </thead>
+          <tbody id="read-body"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section id="sort" class="panel" role="tabpanel">
+    <p id="sort-blank" class="blank-note" hidden>This page is empty. Its sounds show here after you drop them on the page.</p>
+    <div class="db-bar">
+      <div class="views" role="tablist" aria-label="Database views">
+        <button type="button" id="view-table" role="tab" aria-selected="true" aria-controls="as-table">Table</button>
+        <button type="button" id="view-board" role="tab" aria-selected="false" aria-controls="as-board">Board</button>
+        <button type="button" id="view-gallery" role="tab" aria-selected="false" aria-controls="as-gallery">Gallery</button>
+        <button type="button" id="view-chart" role="tab" aria-selected="false" aria-controls="as-chart">Chart</button>
+      </div>
+      <fieldset class="filters">
+        <legend>Filter by pile</legend>
+        <button type="button" data-pile="all" aria-pressed="true">All</button>
+        <button type="button" data-pile="call" aria-pressed="false">Call</button>
+        <button type="button" data-pile="not-call" aria-pressed="false">Not-call</button>
+        <button type="button" data-pile="review" aria-pressed="false">Review</button>
+      </fieldset>
+      <span class="spacer"></span>
+      <span class="hint" id="sort-count"></span>
+    </div>
+
+    <div id="as-table" class="view on">
+      <div class="db-scroll">
+        <table class="sheet">
+          <colgroup>
+            <col><col><col><col><col><col><col><col>
+          </colgroup>
+          <thead>
+            <tr>
+              <th>Sound</th>
+              <th>Window</th>
+              <th>Graph</th>
+              <th class="num">bat</th>
+              <th class="num">baf</th>
+              <th class="num">63 Hz</th>
+              <th>Laya</th>
+              <th>Reason</th>
+            </tr>
+          </thead>
+          <tbody id="sort-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div id="as-board" class="view">
+      <div class="board" id="board"></div>
+    </div>
+
+    <div id="as-gallery" class="view">
+      <div class="gallery" id="gallery"></div>
+    </div>
+
+    <div id="as-chart" class="view">
+      <div class="numbers">
+        <article class="number"><em>Call</em><b>1</b></article>
+        <article class="number"><em>Not-call</em><b>68</b></article>
+        <article class="number"><em>Review</em><b>0</b></article>
+      </div>
+      <div class="chart-grid">
+        <article class="chart-block">
+          <div class="chart-head">
+            <h2>Call score against not-a-call score</h2>
+            <span class="hint">Highest bat in each clip. Green is bat. Gray is baf.</span>
+          </div>
+          <svg class="vbars" viewBox="0 0 372 200" aria-labelledby="bat-bars-title">
+            <title id="bat-bars-title">Bars of bat and baf for samples A through F</title>
+            <g fill="#2b6b3f">
+              <rect x="15" y="86.9" width="14" height="81.1" rx="2"></rect>
+              <rect x="77" y="163.2" width="14" height="4.8" rx="2"></rect>
+              <rect x="139" y="156.3" width="14" height="11.7" rx="2"></rect>
+              <rect x="201" y="161" width="14" height="7" rx="2"></rect>
+              <rect x="263" y="162.6" width="14" height="5.4" rx="2"></rect>
+              <rect x="325" y="161.4" width="14" height="6.6" rx="2"></rect>
+            </g>
+            <g fill="#d3d1cb">
+              <rect x="33" y="89.1" width="14" height="78.9" rx="2"></rect>
+              <rect x="95" y="12.8" width="14" height="155.2" rx="2"></rect>
+              <rect x="157" y="19.7" width="14" height="148.3" rx="2"></rect>
+              <rect x="219" y="15" width="14" height="153" rx="2"></rect>
+              <rect x="281" y="13.4" width="14" height="154.6" rx="2"></rect>
+              <rect x="343" y="14.6" width="14" height="153.4" rx="2"></rect>
+            </g>
+            <g fill="#787774" font-size="13" text-anchor="middle">
+              <text x="31" y="190">A</text>
+              <text x="93" y="190">B</text>
+              <text x="155" y="190">C</text>
+              <text x="217" y="190">D</text>
+              <text x="279" y="190">E</text>
+              <text x="341" y="190">F</text>
+            </g>
+          </svg>
+          <div class="legend"><span><i class="swatch bat"></i>bat, call score</span><span><i class="swatch baf"></i>baf, not-a-call score</span></div>
+        </article>
+        <article class="chart-block">
+          <div class="chart-head">
+            <h2>Call score against 63 Hz</h2>
+            <span class="hint">E and F have no 63 Hz level, so they are not on this chart.</span>
+          </div>
+          <svg class="plot" viewBox="0 0 420 248" aria-labelledby="noise-plot-title">
+            <title id="noise-plot-title">63 hertz level against bat for A, B, C, and D</title>
+            <path d="M48 12 V200 H400" fill="none" stroke="#e9e9e7"></path>
+            <g fill="#787774" font-size="12">
+              <text x="8" y="18">0.5</text>
+              <text x="8" y="204">0</text>
+              <text x="48" y="222">70 dB</text>
+              <text x="352" y="222">78 dB</text>
+            </g>
+            <g font-size="13" font-weight="600">
+              <circle cx="74.4" cy="27" r="5" fill="#2b6b3f"></circle>
+              <text x="86" y="31" fill="#37352f">A</text>
+              <circle cx="114.2" cy="175.6" r="5" fill="#1d4e68"></circle>
+              <text x="126" y="180" fill="#37352f">C</text>
+              <circle cx="320.8" cy="190.6" r="5" fill="#1d4e68"></circle>
+              <text x="332" y="195" fill="#37352f">B</text>
+              <circle cx="373.6" cy="185" r="5" fill="#1d4e68"></circle>
+              <text x="385" y="189" fill="#37352f">D</text>
+            </g>
+          </svg>
+          <p class="hint">A 70.6 dB, bat 0.507. C 71.5 dB, bat 0.073. B 76.2 dB, bat 0.030. D 77.4 dB, bat 0.044.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="export" class="panel" role="tabpanel">
+    <p id="export-blank" class="blank-note" hidden>This page is empty. Export is available after the page has sounds.</p>
+    <div id="export-body">
+    <div class="export-bar">
+      <div>
+        <h2>Write the finished set</h2>
+        <p class="hint">The technical files are written first. report.md is written after them.</p>
+      </div>
+      <span class="spacer"></span>
+      <button class="btn-blue" type="button">Export to a folder</button>
+    </div>
+    <div class="export-list">
+      <div class="file"><strong>decisions.csv</strong><span>Every 25-second graph, with the sound it came from, bat, baf, Laya’s choice, and the reason.</span></div>
+      <div class="file"><strong>decisions.json</strong><span>The same rows, for a program to read.</span></div>
+      <div class="file"><strong>call / not-call / review</strong><span>One folder per pile. Each holds a manifest of the graphs Laya sorted there. Review will be an empty manifest.</span></div>
+      <div class="file"><strong>report.md</strong><span>The counts in sentences, then the comparison: one call, the rest low, quieter and noisier pairs shown.</span></div>
+    </div>
+    <article class="callout">
+      <h2>Report preview</h2>
+      <p>This report covers 69 graphs compiled from 6 sounds. 1 graph went to call. 68 graphs went to not-call.</p>
+      <p>The highest call score is 0.507 on Sample A, from 92.4 to 98.6 seconds. The not-a-call score on that graph is 0.493.</p>
+      <p>One graph stands out. The rest stay low in both the quieter pair and the noisier pair.</p>
+    </article>
+    </div>
+  </section>
+  </main>
+  <aside class="inspector" id="inspector" aria-label="Selected row"></aside>
+</div>
+<script type="module" src="js/app.js"></script>
+</body>
+</html>
